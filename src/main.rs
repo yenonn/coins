@@ -1,60 +1,16 @@
 // ============================================================================
-// MAIN PROGRAM: Coin Combinations Display
+// MAIN PROGRAM: Coin Combinations Web API
 // ============================================================================
-// This file uses the coin library to generate and display all combinations
+// This file starts the web server for the coin combinations API
 
-// Import all public items from our library (lib.rs)
-// `coins` is the crate name from Cargo.toml
-use coins::{generate_all_combinations, generate_random_combination, total_value};
+use coins::web;
 
-fn main() {
-    println!("=== All Coin Combinations ===\n");
+#[tokio::main]
+async fn main() {
+    let addr = "0.0.0.0:8080";
 
-    let all_combinations = generate_all_combinations();
-
-    // Enumerate gives us (index, item) pairs
-    for (index, combination) in all_combinations.iter().enumerate() {
-        print!("Combination {:2}: ", index);
-
-        if combination.is_empty() {
-            println!("{{}} (empty set) - Value: 0 cents");
-        } else {
-            // Print the coins in this combination
-            print!("{{");
-            for (i, coin) in combination.iter().enumerate() {
-                print!("{:?}", coin);
-                if i < combination.len() - 1 {
-                    print!(", ");
-                }
-            }
-            println!("}} - Value: {} cents", total_value(combination));
-        }
-    }
-
-    println!("\nTotal combinations: {}", all_combinations.len());
-
-    // ========================================================================
-    // Display random combinations
-    // ========================================================================
-    println!("\n=== Random Coin Combinations ===\n");
-
-    // Generate and display 5 random combinations
-    for i in 1..=5 {
-        let random_combination = generate_random_combination();
-        print!("Random {:2}: ", i);
-
-        if random_combination.is_empty() {
-            println!("{{}} (empty set) - Value: 0 cents");
-        } else {
-            // Print the coins in this random combination
-            print!("{{");
-            for (j, coin) in random_combination.iter().enumerate() {
-                print!("{:?}", coin);
-                if j < random_combination.len() - 1 {
-                    print!(", ");
-                }
-            }
-            println!("}} - Value: {} cents", total_value(&random_combination));
-        }
+    if let Err(e) = web::run_server(addr).await {
+        eprintln!("Server error: {}", e);
+        std::process::exit(1);
     }
 }

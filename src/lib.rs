@@ -5,13 +5,21 @@
 // The `pub` keyword makes items publicly accessible from main.rs
 
 use rand::Rng;
+use serde::Serialize;
+
+// ============================================================================
+// Modules
+// ============================================================================
+
+pub mod web;
 
 // Derive traits automatically:
 // - Debug: allows printing with {:?}
 // - Clone: allows creating copies of the enum
 // - Copy: allows copying the value instead of moving it
 // - PartialEq: allows comparing coins with == and !=
-#[derive(Debug, Clone, Copy, PartialEq)]
+// - Serialize: allows converting to JSON for web API responses
+#[derive(Debug, Clone, Copy, PartialEq, Serialize)]
 pub enum Coin {
     Penny,
     Nickel,
