@@ -27,7 +27,7 @@ help:
 	@echo "  make inspect      - Inspect the Docker image"
 	@echo ""
 
-# Build the Docker image
+## Builds the Docker image
 .PHONY: build
 build:
 	@echo "Building Docker image: $(DOCKER_TAG)"
