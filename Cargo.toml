@@ -1,5 +1,5 @@
 [package]
-name = "coin"
+name = "coins"
 version = "0.1.0"
 edition = "2024"
 

@@ -4,8 +4,8 @@
 // This file uses the coin library to generate and display all combinations
 
 // Import all public items from our library (lib.rs)
-// `coin` is the crate name from Cargo.toml
-use coin::{generate_all_combinations, generate_random_combination, total_value};
+// `coins` is the crate name from Cargo.toml
+use coins::{generate_all_combinations, generate_random_combination, total_value};
 
 fn main() {
     println!("=== All Coin Combinations ===\n");
