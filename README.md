@@ -138,7 +138,7 @@ pub enum Coin {
 ## Examples
 
 ```rust
-use coin::{Coin, generate_all_combinations, total_value};
+use coins::{Coin, generate_all_combinations, total_value};
 
 // Get all combinations
 let combinations = generate_all_combinations();
