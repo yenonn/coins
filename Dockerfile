@@ -43,5 +43,8 @@ RUN chown coins:coins coins
 # Switch to non-root user
 USER coins
 
+# Expose port 8080 for HTTP traffic
+EXPOSE 8080
+
 # Set the entrypoint
 ENTRYPOINT ["./coins"]

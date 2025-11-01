@@ -17,7 +17,8 @@ help:
 	@echo ""
 	@echo "Available targets:"
 	@echo "  make build        - Build Docker image"
-	@echo "  make run          - Run the coins application in Docker"
+	@echo "  make run          - Run the coins application in Docker (CLI mode)"
+	@echo "  make run-web      - Run the web server with port 8080 exposed"
 	@echo "  make test         - Run tests inside Docker"
 	@echo "  make shell        - Open interactive shell in container"
 	@echo "  make clean        - Remove Docker images and containers"
@@ -25,6 +26,8 @@ help:
 	@echo "  make release      - Build optimized production image"
 	@echo "  make logs         - View container logs"
 	@echo "  make inspect      - Inspect the Docker image"
+	@echo "  make curl-test    - Test web API endpoints with curl"
+	@echo "  make stop-web     - Stop the running web server container"
 	@echo ""
 
 ## Builds the Docker image
@@ -116,3 +119,38 @@ local-run:
 local-test:
 	@echo "Running tests locally with cargo..."
 	cargo test
+
+# Web server targets
+.PHONY: run-web
+run-web:
+	@echo "Running web server on port 8080..."
+	docker run --rm -p 8080:8080 --name $(CONTAINER_NAME)-web $(DOCKER_TAG)
+
+.PHONY: run-web-detached
+run-web-detached:
+	@echo "Running web server in background on port 8080..."
+	docker run -d -p 8080:8080 --name $(CONTAINER_NAME)-web $(DOCKER_TAG)
+
+.PHONY: stop-web
+stop-web:
+	@echo "Stopping web server..."
+	-docker stop $(CONTAINER_NAME)-web 2>/dev/null || true
+	-docker rm $(CONTAINER_NAME)-web 2>/dev/null || true
+
+.PHONY: curl-test
+curl-test:
+	@echo "Testing API endpoints..."
+	@echo "\n=== GET / ==="
+	@curl -s http://localhost:8080/ | jq . || curl -s http://localhost:8080/
+	@echo "\n\n=== GET /health ==="
+	@curl -s http://localhost:8080/health | jq . || curl -s http://localhost:8080/health
+	@echo "\n\n=== GET /random ==="
+	@curl -s http://localhost:8080/random | jq . || curl -s http://localhost:8080/random
+	@echo "\n\n=== GET /all (first 3 combinations) ==="
+	@curl -s http://localhost:8080/all | jq '.combinations[:3]' || curl -s http://localhost:8080/all
+	@echo "\n"
+
+.PHONY: local-run-web
+local-run-web:
+	@echo "Running web server locally with cargo..."
+	cargo run --release
