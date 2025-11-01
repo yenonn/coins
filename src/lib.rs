@@ -4,6 +4,8 @@
 // This file contains all the core logic for coin combinations.
 // The `pub` keyword makes items publicly accessible from main.rs
 
+use rand::Rng;
+
 // Derive traits automatically:
 // - Debug: allows printing with {:?}
 // - Clone: allows creating copies of the enum
@@ -78,6 +80,32 @@ pub fn total_value(coins: &[Coin]) -> u32 {
     // - map(): transforms each coin to its value
     // - sum(): adds up all values
     coins.iter().map(|coin| coin.value_in_cents() as u32).sum()
+}
+
+// Function that generates a single random combination of coins
+// Returns a Vec containing 0-4 coins, randomly selected
+pub fn generate_random_combination() -> Vec<Coin> {
+    let coins = Coin::all();
+    let total_coins = coins.len(); // 4 coins
+    let total_combinations = 1 << total_coins; // 2^4 = 16 combinations
+
+    // Generate a random number from 0 to 15
+    let mut rng = rand::thread_rng();
+    let i = rng.gen_range(0..total_combinations);
+
+    // Create a vector for this random combination
+    let mut combination = Vec::new();
+
+    // Check each bit position using the same algorithm as generate_all_combinations()
+    #[allow(clippy::needless_range_loop)]
+    for j in 0..total_coins {
+        // If the j-th bit is set in i, include the j-th coin
+        if (i >> j) & 1 == 1 {
+            combination.push(coins[j]);
+        }
+    }
+
+    combination
 }
 
 // ============================================================================
@@ -276,5 +304,72 @@ mod tests {
 
         assert_eq!(coin1, coin2);
         assert_eq!(coin2, coin3);
+    }
+
+    // ========================================================================
+    // Tests for generate_random_combination()
+    // ========================================================================
+
+    #[test]
+    fn test_random_combination_length_valid() {
+        // Run multiple times to test randomness
+        for _ in 0..20 {
+            let combination = generate_random_combination();
+            // Length should be between 0 and 4 (inclusive)
+            assert!(
+                combination.len() <= 4,
+                "Random combination should have at most 4 coins"
+            );
+        }
+    }
+
+    #[test]
+    fn test_random_combination_coins_are_valid() {
+        // Run multiple times to test randomness
+        for _ in 0..20 {
+            let combination = generate_random_combination();
+            // All coins in the combination should be valid coin types
+            for coin in &combination {
+                assert!(
+                    matches!(coin, Coin::Penny | Coin::Nickel | Coin::Dime | Coin::Quarter),
+                    "All coins should be valid coin types"
+                );
+            }
+        }
+    }
+
+    #[test]
+    fn test_random_combination_value_in_range() {
+        // Run multiple times to test randomness
+        for _ in 0..20 {
+            let combination = generate_random_combination();
+            let value = total_value(&combination);
+            // Value should be between 0 (empty) and 41 (all coins)
+            assert!(
+                value <= 41,
+                "Random combination value should be at most 41 cents"
+            );
+        }
+    }
+
+    #[test]
+    fn test_random_combination_produces_variety() {
+        // Generate multiple combinations and check they're not all identical
+        let mut combinations = Vec::new();
+        for _ in 0..50 {
+            let combination = generate_random_combination();
+            combinations.push(format!("{:?}", combination));
+        }
+
+        // Remove duplicates by sorting and deduping
+        combinations.sort();
+        combinations.dedup();
+
+        // With 50 attempts, we should get at least 2 different combinations
+        // (statistically very likely given 16 possible combinations)
+        assert!(
+            combinations.len() >= 2,
+            "Should generate variety in random combinations"
+        );
     }
 }
