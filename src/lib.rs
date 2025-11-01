@@ -331,7 +331,10 @@ mod tests {
             // All coins in the combination should be valid coin types
             for coin in &combination {
                 assert!(
-                    matches!(coin, Coin::Penny | Coin::Nickel | Coin::Dime | Coin::Quarter),
+                    matches!(
+                        coin,
+                        Coin::Penny | Coin::Nickel | Coin::Dime | Coin::Quarter
+                    ),
                     "All coins should be valid coin types"
                 );
             }
