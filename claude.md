@@ -73,6 +73,7 @@ The `generate_all_combinations()` function uses **bit manipulation** to generate
 - Result: {Penny, Dime}
 
 **Implementation:**
+
 ```rust
 pub fn generate_all_combinations() -> Vec<Vec<Coin>> {
     let coins = Coin::all();
@@ -102,6 +103,7 @@ pub fn generate_all_combinations() -> Vec<Vec<Coin>> {
 The `generate_random_combination()` function generates a single random combination:
 
 **Implementation:**
+
 ```rust
 pub fn generate_random_combination() -> Vec<Coin> {
     let coins = Coin::all();
@@ -131,6 +133,7 @@ pub fn total_value(coins: &[Coin]) -> u32 {
 ```
 
 Uses iterator chain:
+
 - `iter()` - Creates iterator over coin slice (borrows)
 - `map()` - Transforms each coin to its value
 - `sum()` - Aggregates all values
@@ -142,6 +145,7 @@ The web module implements a REST API using the Axum framework with Tokio runtime
 ### Response Structures (lines 23-50)
 
 #### RandomResponse
+
 ```rust
 #[derive(Serialize)]
 pub struct RandomResponse {
@@ -149,9 +153,11 @@ pub struct RandomResponse {
     pub value: u32,
 }
 ```
+
 Used for `GET /random` endpoint.
 
 #### AllCombinationsResponse
+
 ```rust
 #[derive(Serialize)]
 pub struct AllCombinationsResponse {
@@ -159,9 +165,11 @@ pub struct AllCombinationsResponse {
     pub combinations: Vec<CombinationDetail>,
 }
 ```
+
 Used for `GET /all` endpoint.
 
 #### CombinationDetail
+
 ```rust
 #[derive(Serialize)]
 pub struct CombinationDetail {
@@ -170,9 +178,11 @@ pub struct CombinationDetail {
     pub value: u32,
 }
 ```
+
 Individual combination details within the `/all` response.
 
 #### HealthResponse
+
 ```rust
 #[derive(Serialize)]
 pub struct HealthResponse {
@@ -181,6 +191,7 @@ pub struct HealthResponse {
     pub version: String,
 }
 ```
+
 Used for `GET /health` endpoint.
 
 ### Application State (lines 56-59)
@@ -218,6 +229,7 @@ async fn root() -> impl IntoResponse {
 ```
 
 **Response Example:**
+
 ```json
 {
   "service": "Coin Combinations API",
@@ -248,6 +260,7 @@ async fn health_check() -> impl IntoResponse {
 ```
 
 **Response Example:**
+
 ```json
 {
   "status": "healthy",
@@ -275,6 +288,7 @@ async fn get_random_combination() -> impl IntoResponse {
 ```
 
 **Response Examples:**
+
 ```json
 {"coins": ["Penny", "Dime"], "value": 11}
 {"coins": ["Nickel", "Quarter"], "value": 30}
@@ -309,6 +323,7 @@ async fn get_all_combinations() -> impl IntoResponse {
 ```
 
 **Response Example (truncated):**
+
 ```json
 {
   "total_combinations": 16,
@@ -341,6 +356,7 @@ pub fn create_router() -> Router {
 ```
 
 **Features:**
+
 - Route registration for all endpoints
 - CORS middleware (permissive for demo/public API)
 - Shared application state
@@ -392,6 +408,7 @@ async fn main() {
 ```
 
 **Key Changes:**
+
 - Uses `#[tokio::main]` macro for async runtime
 - Calls `web::run_server()` instead of printing combinations
 - Binds to `0.0.0.0:8080` for Docker compatibility
@@ -404,17 +421,20 @@ The project includes comprehensive tests totaling 40 tests across two modules.
 ### Core Library Tests (src/lib.rs:117-378) - 24 Tests
 
 #### Coin Tests (4 tests)
+
 - ✓ `test_coin_all_returns_four_coins` - Verifies 4 coins returned
 - ✓ `test_coin_all_has_correct_coins` - Validates correct order
 - ✓ `test_penny_value` through `test_quarter_value` - Tests each coin value
 
 #### Total Value Tests (4 tests)
+
 - ✓ `test_total_value_empty` - Empty set = 0 cents
 - ✓ `test_total_value_single_coin` - Single coin value
 - ✓ `test_total_value_multiple_coins` - Sum of multiple coins
 - ✓ `test_total_value_duplicate_coins` - Handles duplicates
 
 #### Combination Generation Tests (8 tests)
+
 - ✓ `test_combinations_count` - Verifies 16 combinations
 - ✓ `test_combinations_has_empty_set` - Index 0 is empty
 - ✓ `test_combinations_has_full_set` - Index 15 has all coins
@@ -425,6 +445,7 @@ The project includes comprehensive tests totaling 40 tests across two modules.
 - ✓ `test_coin_copy_trait` - Copy trait works correctly
 
 #### Random Combination Tests (4 tests)
+
 - ✓ `test_random_combination_length_valid` - Length ≤ 4
 - ✓ `test_random_combination_coins_are_valid` - Valid coin types
 - ✓ `test_random_combination_value_in_range` - Value ≤ 41 cents
@@ -433,12 +454,14 @@ The project includes comprehensive tests totaling 40 tests across two modules.
 ### Web Module Tests (src/web.rs:177-561) - 16 Tests
 
 #### Response Structure Tests (4 tests)
+
 - ✓ `test_random_response_serialization` - RandomResponse JSON format
 - ✓ `test_health_response_serialization` - HealthResponse JSON format
 - ✓ `test_combination_detail_serialization` - CombinationDetail structure
 - ✓ `test_all_combinations_response_structure` - AllCombinationsResponse
 
 #### HTTP Endpoint Tests (7 tests)
+
 - ✓ `test_root_endpoint` - GET / returns API info
 - ✓ `test_health_endpoint` - GET /health returns health status
 - ✓ `test_random_endpoint_returns_valid_response` - GET /random structure
@@ -448,13 +471,16 @@ The project includes comprehensive tests totaling 40 tests across two modules.
 - ✓ `test_invalid_route_returns_404` - 404 for invalid routes
 
 #### Router & Configuration Tests (2 tests)
+
 - ✓ `test_router_creation` - Router builds without panics
 - ✓ `test_app_state_creation` - AppState Clone trait works
 
 #### Content-Type Tests (1 test)
+
 - ✓ `test_response_content_type_is_json` - application/json header
 
 #### Edge Case Tests (2 tests)
+
 - ✓ `test_multiple_requests_to_same_endpoint` - 5 concurrent requests
 - ✓ `test_random_endpoint_value_matches_coins` - Value calculation accuracy
 
@@ -476,6 +502,176 @@ cargo test -- --nocapture
 # Run specific test
 cargo test test_random_endpoint_produces_variety -- --nocapture
 ```
+
+## Code Coverage
+
+The project uses **cargo-llvm-cov** for code coverage analysis, providing accurate line, branch, function, and region coverage metrics. Coverage is integrated into both local development workflows and CI/CD pipelines.
+
+### Coverage Tool Selection
+
+**Why cargo-llvm-cov over cargo-tarpaulin:**
+
+- **Cross-platform**: Works on macOS, Linux, and Windows
+- **Accuracy**: Uses LLVM's native coverage instrumentation
+- **Performance**: Faster execution compared to tarpaulin
+- **Maintenance**: Actively maintained and up-to-date
+- **Integration**: Seamless integration with cargo toolchain
+
+### Local Coverage Generation
+
+The Makefile (lines 126-154) provides convenient commands for generating coverage reports:
+
+```bash
+# Generate lcov.info format (for CI/editors)
+make coverage
+
+# Generate and open HTML report in browser
+make coverage-html
+
+# Show coverage summary in terminal
+make coverage-text
+
+# Generate lcov for CI/editors
+make coverage-lcov
+```
+
+**Makefile Implementation:**
+
+```makefile
+.PHONY: coverage
+coverage:
+ @echo "Generating code coverage report..."
+ @echo "Note: Install cargo-llvm-cov if needed: cargo install cargo-llvm-cov"
+ cargo llvm-cov --all-features --workspace --lcov --output-path lcov.info
+ @echo ""
+ @echo "Coverage report generated: lcov.info"
+ @echo "Run 'make coverage-html' to view HTML report"
+
+.PHONY: coverage-html
+coverage-html:
+ @echo "Generating HTML coverage report..."
+ @echo "Note: Install cargo-llvm-cov if needed: cargo install cargo-llvm-cov"
+ cargo llvm-cov --all-features --workspace --html --open
+ @echo "HTML report opened in browser"
+```
+
+### Coverage Output Formats
+
+1. **LCOV Format** (`lcov.info`):
+   - Industry-standard format
+   - Compatible with VS Code extensions
+   - Used by CI/CD pipelines
+   - Uploadable to Codecov/Coveralls
+
+2. **HTML Report** (`target/llvm-cov/html/`):
+   - Interactive web interface
+   - Color-coded source files
+   - Drill-down capability
+   - Line-by-line coverage visualization
+
+3. **Terminal Output**:
+   - Quick summary statistics
+   - Per-file coverage percentages
+   - Overall project coverage
+
+### CI Integration (.github/workflows/ci.yml:61-89)
+
+The coverage job runs automatically on every push and pull request:
+
+```yaml
+coverage:
+  name: Code Coverage
+  runs-on: ubuntu-latest
+  steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Rust
+      uses: dtolnay/rust-toolchain@stable
+
+    - name: Install cargo-llvm-cov
+      uses: taiki-e/install-action@cargo-llvm-cov
+
+    - name: Generate coverage
+      run: cargo llvm-cov --all-features --workspace --lcov --output-path lcov.info
+
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v4
+      with:
+        files: ./lcov.info
+        fail_ci_if_error: false
+      env:
+        CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+
+    - name: Upload coverage report artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: coverage-report
+        path: lcov.info
+```
+
+**CI Benefits:**
+
+- Automated coverage tracking on every commit
+- Coverage reports available as downloadable artifacts
+- Optional Codecov integration for trend analysis
+- No manual intervention required
+
+### Ignored Files (.gitignore:20-28)
+
+Coverage-related files and directories are excluded from version control:
+
+```gitignore
+# Code coverage
+lcov.info
+*.profraw
+*.profdata
+/target/llvm-cov-target/
+/target/llvm-cov/
+/target/coverage/
+html/
+coverage/
+```
+
+### Installation
+
+One-time setup for local development:
+
+```bash
+cargo install cargo-llvm-cov
+```
+
+The tool is automatically installed in CI using the `taiki-e/install-action` for optimal caching and speed.
+
+### Coverage Metrics
+
+The project aims for comprehensive test coverage across:
+
+- **Core library** (src/lib.rs): Coin enum, combination algorithms, value calculations
+- **Web module** (src/web.rs): HTTP handlers, response structures, routing
+- **Integration points**: End-to-end API testing
+
+**Expected coverage areas:**
+
+- High coverage (>90%): Core algorithms, value calculations
+- Good coverage (>80%): HTTP handlers, response serialization
+- Moderate coverage: Error handling paths, edge cases
+
+### Using Coverage for Development
+
+**Best practices:**
+
+1. Run `make coverage-html` before committing to identify untested code
+2. Review coverage reports when adding new features
+3. Ensure critical paths have test coverage
+4. Don't obsess over 100% coverage - focus on meaningful tests
+5. Use coverage to find dead code and untested edge cases
+
+**Integration with IDEs:**
+
+- VS Code: Install "Coverage Gutters" extension, open `lcov.info`
+- IntelliJ IDEA: Built-in support for LCOV format
+- Vim/Neovim: Use plugins like `coc-coverage` or `nvim-coverage`
 
 ## Dependencies (Cargo.toml)
 
@@ -509,12 +705,14 @@ mime = "0.3"               # Content-type testing
 The project uses a multi-stage build for optimal image size and security:
 
 **Stage 1: Builder**
+
 - Base: `rust:1.83`
 - Compiles the application in release mode
 - Runs all 40 tests during build
 - ~2GB image size (not shipped)
 
 **Stage 2: Runtime**
+
 - Base: `debian:bookworm-slim`
 - Copies only the compiled binary
 - Non-root user (`coins:coins`)
@@ -583,6 +781,7 @@ curl -s http://localhost:8080/random | jq '.value'
 ## Key Rust Concepts Demonstrated
 
 ### Core Concepts
+
 1. **Enums with Methods** - Rich enum types with associated functions
 2. **Trait Derivation** - Automatic implementation of Debug, Clone, Copy, PartialEq, Serialize
 3. **Bit Manipulation** - Efficient power set generation using bitwise operators
@@ -593,6 +792,7 @@ curl -s http://localhost:8080/random | jq '.value'
 8. **Ownership** - Borrowing with `&[Coin]` and lifetime management
 
 ### Web Development Concepts
+
 9. **Async/Await** - Tokio runtime with async handlers
 10. **HTTP Servers** - Axum web framework with routing
 11. **JSON Serialization** - Serde for request/response handling
@@ -602,6 +802,7 @@ curl -s http://localhost:8080/random | jq '.value'
 15. **Integration Testing** - Testing HTTP endpoints with test client
 
 ### DevOps Concepts
+
 16. **Docker** - Multi-stage builds for minimal image size
 17. **CI/CD** - GitHub Actions with format, lint, test, build
 18. **Makefile** - Development workflow automation
@@ -619,6 +820,7 @@ For a set with n elements, the power set has 2^n elements:
 - Includes empty set {} and full set {P, N, D, Q}
 
 **Bit Mapping:**
+
 - Combination 0 (0000) = {} (empty)
 - Combination 1 (0001) = {Penny}
 - Combination 2 (0010) = {Nickel}
@@ -638,6 +840,7 @@ For a set with n elements, the power set has 2^n elements:
 ## Architecture Decisions
 
 ### Why Axum?
+
 - Fast and ergonomic web framework
 - Strong type safety
 - Excellent error messages
@@ -645,18 +848,21 @@ For a set with n elements, the power set has 2^n elements:
 - Modular middleware system
 
 ### Why Bit Manipulation?
+
 - Elegant mathematical approach
 - O(2^n) is optimal for power set
 - Demonstrates low-level operations
 - Educational value
 
 ### Why Multi-Stage Docker?
+
 - Small final image (~80MB vs ~2GB)
 - No build tools in production
 - Security: minimal attack surface
 - Fast deployment
 
 ### Why Comprehensive Testing?
+
 - 40 tests ensure correctness
 - Integration tests validate HTTP layer
 - CI/CD catches regressions
@@ -667,6 +873,7 @@ For a set with n elements, the power set has 2^n elements:
 Potential improvements:
 
 ### Features
+
 - WebSocket support for real-time updates
 - Rate limiting middleware
 - API key authentication
@@ -675,6 +882,7 @@ Potential improvements:
 - Caching layer (Redis)
 
 ### Technical
+
 - OpenAPI/Swagger documentation
 - Metrics and monitoring (Prometheus)
 - Database integration for persistence
@@ -683,6 +891,7 @@ Potential improvements:
 - Support for international currencies
 
 ### DevOps
+
 - Kubernetes deployment manifests
 - Helm charts
 - Health check probes
@@ -691,9 +900,9 @@ Potential improvements:
 
 ## References
 
-- **Rust Book**: https://doc.rust-lang.org/book/
-- **Axum Docs**: https://docs.rs/axum/
-- **Tokio Guide**: https://tokio.rs/tokio/tutorial
-- **Serde Guide**: https://serde.rs/
-- **Power Set**: https://en.wikipedia.org/wiki/Power_set
-- **Bit Manipulation**: https://en.wikipedia.org/wiki/Bit_manipulation
+- **Rust Book**: <https://doc.rust-lang.org/book/>
+- **Axum Docs**: <https://docs.rs/axum/>
+- **Tokio Guide**: <https://tokio.rs/tokio/tutorial>
+- **Serde Guide**: <https://serde.rs/>
+- **Power Set**: <https://en.wikipedia.org/wiki/Power_set>
+- **Bit Manipulation**: <https://en.wikipedia.org/wiki/Bit_manipulation>

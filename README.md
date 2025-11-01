@@ -17,6 +17,7 @@ This project demonstrates fundamental Rust concepts through a practical web API:
 - 🐳 Docker support with multi-stage builds
 - 🧪 Comprehensive test suite (40+ tests)
 - 📊 JSON responses for all endpoints
+- 📈 Code coverage tracking with cargo-llvm-cov
 - 🔒 Security-focused Docker configuration
 - 📚 Well-documented with extensive inline comments
 
@@ -171,6 +172,54 @@ cargo test web::tests
 make test
 ```
 
+## Code Coverage
+
+This project includes code coverage tracking using `cargo-llvm-cov`, which provides accurate line and branch coverage analysis.
+
+### Prerequisites
+
+Install cargo-llvm-cov (one-time setup):
+
+```bash
+cargo install cargo-llvm-cov
+```
+
+### Generate Coverage Reports
+
+```bash
+# Generate lcov.info coverage file
+make coverage
+
+# Generate and open HTML coverage report in browser
+make coverage-html
+
+# Show coverage summary in terminal
+make coverage-text
+
+# Generate lcov format for CI/editors
+make coverage-lcov
+```
+
+### Understanding Coverage Output
+
+The HTML report (`make coverage-html`) provides:
+- **Line coverage**: Which lines of code are executed by tests
+- **Branch coverage**: Which code paths (if/else, match arms) are tested
+- **Function coverage**: Which functions are called during tests
+- **Region coverage**: Detailed coverage of code regions
+
+Coverage files and directories (automatically ignored by git):
+- `lcov.info` - LCOV format coverage data
+- `target/llvm-cov-target/` - Coverage build artifacts
+- `html/` or `target/llvm-cov/html/` - HTML coverage reports
+
+### CI Integration
+
+Code coverage is automatically generated in the CI pipeline:
+- Coverage runs on every push and pull request
+- Coverage report is uploaded to Codecov (if configured)
+- Coverage artifacts are available for download from GitHub Actions
+
 ## Docker Commands
 
 The project includes a comprehensive Makefile with convenient Docker commands:
@@ -248,6 +297,7 @@ Example: `5` in binary is `0101`:
 ### DevOps & Testing
 - **Unit Testing**: 24 core logic tests
 - **Integration Testing**: 16 HTTP endpoint tests
+- **Code Coverage**: cargo-llvm-cov for coverage tracking
 - **Docker**: Multi-stage builds for minimal image size
 - **CI/CD**: GitHub Actions pipeline
 - **Makefile**: Development workflow automation
@@ -392,7 +442,7 @@ The workflow performs the following checks:
 2. **Linting** - Catches common mistakes and enforces best practices (`cargo clippy`)
 3. **Build** - Verifies the project compiles successfully
 4. **Tests** - Runs all 40 unit and integration tests
-5. **Docker Build** - Verifies Docker image builds correctly
+5. **Code Coverage** - Generates coverage report with `cargo-llvm-cov` and uploads to Codecov
 
 All checks must pass before a pull request can be merged to the main branch.
 
