@@ -1,0 +1,35 @@
+// ============================================================================
+// MAIN PROGRAM: Coin Combinations Display
+// ============================================================================
+// This file uses the coin library to generate and display all combinations
+
+// Import all public items from our library (lib.rs)
+// `coin` is the crate name from Cargo.toml
+use coin::{generate_all_combinations, total_value};
+
+fn main() {
+    println!("=== All Coin Combinations ===\n");
+
+    let all_combinations = generate_all_combinations();
+
+    // Enumerate gives us (index, item) pairs
+    for (index, combination) in all_combinations.iter().enumerate() {
+        print!("Combination {:2}: ", index);
+
+        if combination.is_empty() {
+            println!("{{}} (empty set) - Value: 0 cents");
+        } else {
+            // Print the coins in this combination
+            print!("{{");
+            for (i, coin) in combination.iter().enumerate() {
+                print!("{:?}", coin);
+                if i < combination.len() - 1 {
+                    print!(", ");
+                }
+            }
+            println!("}} - Value: {} cents", total_value(combination));
+        }
+    }
+
+    println!("\nTotal combinations: {}", all_combinations.len());
+}
