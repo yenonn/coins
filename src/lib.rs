@@ -51,6 +51,8 @@ pub fn generate_all_combinations() -> Vec<Vec<Coin>> {
         let mut combination = Vec::new();
 
         // Check each bit position (0 to 3)
+        // Note: We use the index j for bit manipulation (i >> j), not just array indexing
+        #[allow(clippy::needless_range_loop)]
         for j in 0..total_coins {
             // If the j-th bit is set in i, include the j-th coin
             // Example: i=5 (binary: 0101)
@@ -241,16 +243,8 @@ mod tests {
     fn test_combination_values_range() {
         let combinations = generate_all_combinations();
         // Check that values range from 0 to 41 cents
-        let min_value = combinations
-            .iter()
-            .map(|c| total_value(c))
-            .min()
-            .unwrap();
-        let max_value = combinations
-            .iter()
-            .map(|c| total_value(c))
-            .max()
-            .unwrap();
+        let min_value = combinations.iter().map(|c| total_value(c)).min().unwrap();
+        let max_value = combinations.iter().map(|c| total_value(c)).max().unwrap();
 
         assert_eq!(min_value, 0, "Minimum value should be 0 (empty set)");
         assert_eq!(max_value, 41, "Maximum value should be 41 (all coins)");
@@ -264,12 +258,13 @@ mod tests {
     fn test_all_single_coin_combinations_exist() {
         let combinations = generate_all_combinations();
         // Check that all single-coin combinations exist
-        let single_coin_combos: Vec<_> = combinations
-            .iter()
-            .filter(|c| c.len() == 1)
-            .collect();
+        let single_coin_combos: Vec<_> = combinations.iter().filter(|c| c.len() == 1).collect();
 
-        assert_eq!(single_coin_combos.len(), 4, "Should have 4 single-coin combinations");
+        assert_eq!(
+            single_coin_combos.len(),
+            4,
+            "Should have 4 single-coin combinations"
+        );
     }
 
     #[test]
