@@ -278,7 +278,10 @@ mod tests {
         assert!(body["endpoints"].is_object());
         assert_eq!(body["endpoints"]["/"], "API information");
         assert_eq!(body["endpoints"]["/health"], "Health check");
-        assert_eq!(body["endpoints"]["/random"], "Get a random coin combination");
+        assert_eq!(
+            body["endpoints"]["/random"],
+            "Get a random coin combination"
+        );
         assert_eq!(
             body["endpoints"]["/all"],
             "Get all possible coin combinations (16 total)"
@@ -355,10 +358,7 @@ mod tests {
         // With 10 attempts, we should get at least 2 different results
         results.sort();
         results.dedup();
-        assert!(
-            results.len() >= 2,
-            "Random endpoint should produce variety"
-        );
+        assert!(results.len() >= 2, "Random endpoint should produce variety");
     }
 
     #[tokio::test]
@@ -366,12 +366,7 @@ mod tests {
         let app = create_router();
 
         let response = app
-            .oneshot(
-                Request::builder()
-                    .uri("/all")
-                    .body(Body::empty())
-                    .unwrap(),
-            )
+            .oneshot(Request::builder().uri("/all").body(Body::empty()).unwrap())
             .await
             .unwrap();
 
@@ -400,12 +395,7 @@ mod tests {
         let app = create_router();
 
         let response = app
-            .oneshot(
-                Request::builder()
-                    .uri("/all")
-                    .body(Body::empty())
-                    .unwrap(),
-            )
+            .oneshot(Request::builder().uri("/all").body(Body::empty()).unwrap())
             .await
             .unwrap();
 
