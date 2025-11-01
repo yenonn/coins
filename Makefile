@@ -28,6 +28,9 @@ help:
 	@echo "  make inspect      - Inspect the Docker image"
 	@echo "  make curl-test    - Test web API endpoints with curl"
 	@echo "  make stop-web     - Stop the running web server container"
+	@echo "  make coverage     - Generate code coverage report (requires cargo-llvm-cov)"
+	@echo "  make coverage-html - Generate and open HTML coverage report"
+	@echo "  make coverage-lcov - Generate lcov format for CI/editors"
 	@echo ""
 
 ## Builds the Docker image
@@ -119,6 +122,36 @@ local-run:
 local-test:
 	@echo "Running tests locally with cargo..."
 	cargo test
+
+# Code coverage targets (requires cargo-llvm-cov: cargo install cargo-llvm-cov)
+.PHONY: coverage
+coverage:
+	@echo "Generating code coverage report..."
+	@echo "Note: Install cargo-llvm-cov if needed: cargo install cargo-llvm-cov"
+	cargo llvm-cov --all-features --workspace --lcov --output-path lcov.info
+	@echo ""
+	@echo "Coverage report generated: lcov.info"
+	@echo "Run 'make coverage-html' to view HTML report"
+
+.PHONY: coverage-html
+coverage-html:
+	@echo "Generating HTML coverage report..."
+	@echo "Note: Install cargo-llvm-cov if needed: cargo install cargo-llvm-cov"
+	cargo llvm-cov --all-features --workspace --html --open
+	@echo "HTML report opened in browser"
+
+.PHONY: coverage-lcov
+coverage-lcov:
+	@echo "Generating lcov coverage report for CI..."
+	@echo "Note: Install cargo-llvm-cov if needed: cargo install cargo-llvm-cov"
+	cargo llvm-cov --all-features --workspace --lcov --output-path lcov.info
+	@echo "Coverage report: lcov.info"
+
+.PHONY: coverage-text
+coverage-text:
+	@echo "Showing coverage in terminal..."
+	@echo "Note: Install cargo-llvm-cov if needed: cargo install cargo-llvm-cov"
+	cargo llvm-cov --all-features --workspace
 
 # Web server targets
 .PHONY: run-web

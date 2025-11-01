@@ -16,3 +16,13 @@
 # Backup files
 *.bak
 *.tmp
+
+# Code coverage
+lcov.info
+*.profraw
+*.profdata
+/target/llvm-cov-target/
+/target/llvm-cov/
+/target/coverage/
+html/
+coverage/
