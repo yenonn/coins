@@ -1,5 +1,7 @@
 # Coin Combinations
 
+[![CI](https://github.com/YOUR_USERNAME/coins/actions/workflows/ci.yml/badge.svg)](https://github.com/YOUR_USERNAME/coins/actions/workflows/ci.yml)
+
 A Rust program that generates and displays all possible combinations of US coins using bit manipulation to create a power set.
 
 ## Overview
@@ -161,6 +163,40 @@ cargo doc --open
 
 # Build release version
 cargo build --release
+```
+
+## Continuous Integration
+
+This project uses GitHub Actions for automated testing. The CI pipeline runs on:
+- Pull requests to `main` or `master` branches
+- Direct pushes to `main` or `master` branches
+
+### CI Checks
+
+The workflow performs the following checks:
+
+1. **Code Formatting** - Ensures code follows Rust style guidelines (`cargo fmt`)
+2. **Linting** - Catches common mistakes and enforces best practices (`cargo clippy`)
+3. **Build** - Verifies the project compiles successfully
+4. **Tests** - Runs all unit tests to ensure functionality
+5. **Coverage** - Generates code coverage reports (optional)
+
+All checks must pass before a pull request can be merged to the main branch.
+
+### Running CI Locally
+
+To run the same checks locally before pushing:
+
+```bash
+# Format check
+cargo fmt -- --check
+
+# Linting
+cargo clippy -- -D warnings
+
+# Build and test
+cargo build --verbose
+cargo test --verbose
 ```
 
 ## License
