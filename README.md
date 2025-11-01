@@ -1,6 +1,6 @@
 # Coin Combinations
 
-[![CI](https://github.com/YOUR_USERNAME/coins/actions/workflows/ci.yml/badge.svg)](https://github.com/YOUR_USERNAME/coins/actions/workflows/ci.yml)
+[![CI](https://github.com/yenonn/coins/actions/workflows/ci.yml/badge.svg)](https://github.com/yenonn/coins/actions/workflows/ci.yml)
 
 A Rust program that generates and displays all possible combinations of US coins using bit manipulation to create a power set.
 
